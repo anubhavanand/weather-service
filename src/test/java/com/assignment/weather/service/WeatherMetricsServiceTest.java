@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,7 +50,7 @@ class WeatherMetricsServiceTest {
         when(projection.getMetricType()).thenReturn(MetricType.TEMPERATURE);
         when(projection.getValue()).thenReturn(20.0);
 
-        when(repository.findAvgValuePerSensorAndMetric(any(), anyBoolean(), any(), any(), any()))
+        when(repository.findAvgValuePerSensorAndMetric(any(), any(), any(), any()))
                 .thenReturn(List.of(projection));
 
         List<MetricsResponse> result = service.getSensorMetrics(request);

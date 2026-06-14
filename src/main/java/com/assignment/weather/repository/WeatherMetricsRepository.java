@@ -27,14 +27,13 @@ public interface WeatherMetricsRepository extends JpaRepository<Metric, String> 
             m.metricType AS metricType,
             MAX(m.metricValue) AS value
         FROM Metric m
-        WHERE (:allSensors = true OR m.sensorId IN :sensorIds)
+        WHERE (:sensorIds IS NULL OR m.sensorId IN :sensorIds)
           AND m.metricType IN :metricTypes
           AND m.timestamp BETWEEN :startDate AND :endDate
         GROUP BY m.sensorId, m.metricType
    """)
 	List<WeatherMetricStatisticProjection> findMaxValuePerSensorAndMetric(
 			@Param("sensorIds") List<Long> sensorIds,
-			@Param("allSensors") boolean allSensors,
 			@Param("metricTypes") List<MetricType> metricTypes,
 			@Param("startDate") Instant startDate,
 			@Param("endDate") Instant endDate
@@ -46,14 +45,13 @@ public interface WeatherMetricsRepository extends JpaRepository<Metric, String> 
             m.metricType AS metricType,
             MIN(m.metricValue) AS value
         FROM Metric m
-        WHERE (:allSensors = true OR m.sensorId IN :sensorIds)
+        WHERE (:sensorIds IS NULL OR m.sensorId IN :sensorIds)
           AND m.metricType IN :metricTypes
           AND m.timestamp BETWEEN :startDate AND :endDate
         GROUP BY m.sensorId, m.metricType
     """)
 	List<WeatherMetricStatisticProjection> findMinValuePerSensorAndMetric(
 			@Param("sensorIds") List<Long> sensorIds,
-			@Param("allSensors") boolean allSensors,
 			@Param("metricTypes") List<MetricType> metricTypes,
 			@Param("startDate") Instant startDate,
 			@Param("endDate") Instant endDate
@@ -65,14 +63,13 @@ public interface WeatherMetricsRepository extends JpaRepository<Metric, String> 
             m.metricType AS metricType,
             AVG(m.metricValue) AS value
         FROM Metric m
-        WHERE (:allSensors = true OR m.sensorId IN :sensorIds)
+        WHERE (:sensorIds IS NULL OR m.sensorId IN :sensorIds)
           AND m.metricType IN :metricTypes
           AND m.timestamp BETWEEN :startDate AND :endDate
         GROUP BY m.sensorId, m.metricType
     """)
 	List<WeatherMetricStatisticProjection> findAvgValuePerSensorAndMetric(
 			@Param("sensorIds") List<Long> sensorIds,
-			@Param("allSensors") boolean allSensors,
 			@Param("metricTypes") List<MetricType> metricTypes,
 			@Param("startDate") Instant startDate,
 			@Param("endDate") Instant endDate
@@ -84,14 +81,13 @@ public interface WeatherMetricsRepository extends JpaRepository<Metric, String> 
             m.metricType AS metricType,
             SUM(m.metricValue) AS value
         FROM Metric m
-        WHERE (:allSensors = true OR m.sensorId IN :sensorIds)
+        WHERE (:sensorIds IS NULL OR m.sensorId IN :sensorIds)
           AND m.metricType IN :metricTypes
           AND m.timestamp BETWEEN :startDate AND :endDate
         GROUP BY m.sensorId, m.metricType
     """)
 	List<WeatherMetricStatisticProjection> findSumValuePerSensorAndMetric(
 			@Param("sensorIds") List<Long> sensorIds,
-			@Param("allSensors") boolean allSensors,
 			@Param("metricTypes") List<MetricType> metricTypes,
 			@Param("startDate") Instant startDate,
 			@Param("endDate") Instant endDate
@@ -99,7 +95,7 @@ public interface WeatherMetricsRepository extends JpaRepository<Metric, String> 
 
 	@Query("""
 			SELECT m FROM Metric m
-			WHERE (:allSensors = true OR m.sensorId IN :sensorIds)
+			WHERE (:sensorIds IS NULL OR m.sensorId IN :sensorIds)
 			  AND m.metricType IN :metricsTypes
 			  AND m.timestamp = (
 			      SELECT MAX(m2.timestamp)
@@ -110,7 +106,6 @@ public interface WeatherMetricsRepository extends JpaRepository<Metric, String> 
 			""")
 	List<Metric> findLatestBySensorIdInAndMetricTypeIn(
 			@Param("sensorIds") List<Long> sensorIds,
-			@Param("allSensors") boolean allSensors,
 			@Param("metricsTypes") List<MetricType> metricsTypes);
 
 	Optional<Metric> findTopBySensorIdAndMetricTypeOrderByTimestampDesc(

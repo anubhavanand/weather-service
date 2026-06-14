@@ -62,27 +62,17 @@ public class WeatherMetricsService {
 
     private List<MetricsResponse> getMetricsInDateRange(final MetricsRequest request) {
         log.info("Fetching metrics for statistics type: {}", request.getStatisticType());
-        List<Long> sensorIds = request.getSensorIds();
-        boolean allSensors = false;
-        if (CollectionUtils.isEmpty(sensorIds)) {
-            log.info("No Sensor ids provided, will fetch metrics for all sensors.");
-            sensorIds = List.of(-1L);
-            allSensors = true;
-        }
+        final List<Long> sensorIds = CollectionUtils.isEmpty(request.getSensorIds()) ? null : request.getSensorIds();
 
         final List<MetricType> metricTypes = request.getMetricsTypes();
         final Instant startDate = request.getStartDate().atStartOfDay(zone).toInstant();
         final Instant endDate = request.getEndDate().plusDays(1).atStartOfDay(zone).toInstant();
         final List<WeatherMetricStatisticProjection> metrics =
                 switch (request.getStatisticType()) {
-                    case MIN ->
-                            repository.findMinValuePerSensorAndMetric(sensorIds, allSensors, metricTypes, startDate, endDate);
-                    case MAX ->
-                            repository.findMaxValuePerSensorAndMetric(sensorIds, allSensors, metricTypes, startDate, endDate);
-                    case SUM ->
-                            repository.findSumValuePerSensorAndMetric(sensorIds, allSensors, metricTypes, startDate, endDate);
-                    case AVG ->
-                            repository.findAvgValuePerSensorAndMetric(sensorIds, allSensors, metricTypes, startDate, endDate);
+                    case MIN -> repository.findMinValuePerSensorAndMetric(sensorIds, metricTypes, startDate, endDate);
+                    case MAX -> repository.findMaxValuePerSensorAndMetric(sensorIds, metricTypes, startDate, endDate);
+                    case SUM -> repository.findSumValuePerSensorAndMetric(sensorIds, metricTypes, startDate, endDate);
+                    case AVG -> repository.findAvgValuePerSensorAndMetric(sensorIds, metricTypes, startDate, endDate);
                 };
         log.info("{} Metrics received.", metrics.size());
         return metrics.stream()
@@ -128,14 +118,9 @@ public class WeatherMetricsService {
 
     private List<MetricsResponse> getLatestMetricsForMultiple(final MetricsRequest request) {
         log.info("Fetching Latest Metrics for multiple sensor ids");
-        List<Long> sensorIds = request.getSensorIds();
-        boolean allSensors = false;
-        if (CollectionUtils.isEmpty(sensorIds)) {
-            sensorIds = List.of(-1L);
-            allSensors = true;
-        }
+        final List<Long> sensorIds = CollectionUtils.isEmpty(request.getSensorIds()) ? null : request.getSensorIds();
         final List<Metric> metrics = repository.findLatestBySensorIdInAndMetricTypeIn(
-                sensorIds, allSensors, request.getMetricsTypes());
+                sensorIds, request.getMetricsTypes());
 
         return metrics.stream()
                 .map(metric -> new MetricsResponse(

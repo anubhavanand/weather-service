@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: weather-service
+
+cache:
+  expire-after-write-minutes: 1
+  maximum-size: 1000

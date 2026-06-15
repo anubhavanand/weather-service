@@ -15,8 +15,8 @@ For example, requesting the average temperature for sensors 1 and 2 returns sepa
 - The application uses H2 in-memory database. Data is not persisted across application restarts.
 
 ## Prerequisites
-- Java 17 or higher
-- Maven 3.6+
+- Java 21
+- Maven 3.6+ (Maven Wrapper uses **3.9.16**)
 - (Optional) curl or any HTTP client for testing
 
 ## How to Run the Application

@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 1. Timestamp "recordedAt" in MeterRequest is important since it supports batch
+ * 2. BatchId is important
+ */
 @RestController
 @RequestMapping("/v1/sensor/ingest-readings/{sensorId}")
 @Slf4j

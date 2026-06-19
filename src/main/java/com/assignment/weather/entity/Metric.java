@@ -10,7 +10,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -38,7 +37,6 @@ public class Metric {
     @Column(name = "metric_value", nullable = false, updatable = false)
     private double metricValue;
 
-    @CreationTimestamp
     @Column(name = "timestamp", nullable = false)
     private Instant timestamp;
 }

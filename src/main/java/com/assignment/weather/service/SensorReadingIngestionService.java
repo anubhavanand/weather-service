@@ -23,6 +23,9 @@ import java.util.UUID;
 public class SensorReadingIngestionService {
 
     private final WeatherMetricsRepository repository;
+
+    //More of a business decision than a technical on using SaveAll, Its easier to report back to downstream
+    //Take example of AWS BatchMeter API
     @Transactional
     public List<SensorResponse> ingestReadings(final Long sensorId, final SensorRequest request) {
         log.info("Received request for ingesting metrics reading for sensor: {}", sensorId);
@@ -41,7 +44,7 @@ public class SensorReadingIngestionService {
             metric.setSensorId(sensorId);
             metric.setMetricType(reading.getMetricType());
             metric.setMetricValue(reading.getMetricValue());
-            metric.setTimestamp(Instant.now());
+            metric.setTimestamp(reading.getRecordedAt() == null ? Instant.now() : reading.getRecordedAt());
             metrics.add(metric);
         });
         return metrics;

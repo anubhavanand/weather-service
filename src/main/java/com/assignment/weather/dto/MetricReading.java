@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.Instant;
+
 /**
  * Reading sent by sensors.
  */
@@ -15,4 +17,5 @@ public class MetricReading {
     private MetricType metricType;
     @NotNull(message = "Metric value is required")
     private double metricValue;
+    private Instant recordedAt;
 }

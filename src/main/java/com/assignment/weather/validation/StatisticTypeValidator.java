@@ -1,7 +1,6 @@
 package com.assignment.weather.validation;
 
 import com.assignment.weather.dto.MetricsRequest;
-import com.assignment.weather.model.StatisticType;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
